@@ -71,6 +71,20 @@ android {
                 // must never be what's attached to a GitHub Release.
                 signingConfigs.getByName("debug")
             }
+            // Explicitly off, not just "not set" — Flutter's default release
+            // config otherwise enables R8 resource shrinking, which renames
+            // resource files (res/ic_notification.png -> res/0N.png, etc.).
+            // flutter_local_notifications looks up its icon by resource NAME
+            // STRING at runtime (Resources.getIdentifier), not a compile-time
+            // R.mipmap reference, so shrinking silently broke it — the app
+            // crashed on first launch with "resource could not be found"
+            // before ever reaching the first frame, only on a real signed
+            // release build (never seen on debug/the emulator). This app is
+            // sideloaded via GitHub Releases, not the Play Store, so the APK
+            // size savings from shrinking aren't worth reintroducing that
+            // whole class of "silently breaks a runtime string lookup" bug.
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
