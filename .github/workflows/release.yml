@@ -28,8 +28,14 @@ jobs:
         run: echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.jks
 
       - name: Write key.properties
+        # The quoted 'EOF' delimiter matters: an unquoted heredoc lets bash
+        # expand $-sequences in its body, and a password containing "$#"
+        # (a real bash special variable) would get silently corrupted
+        # before ever reaching the keystore — quoting makes this a fully
+        # literal block, no expansion, regardless of what characters a
+        # secret's value happens to contain.
         run: |
-          cat > android/key.properties <<EOF
+          cat > android/key.properties <<'EOF'
           storeFile=release.jks
           storePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           keyAlias=${{ secrets.RELEASE_KEY_ALIAS }}
