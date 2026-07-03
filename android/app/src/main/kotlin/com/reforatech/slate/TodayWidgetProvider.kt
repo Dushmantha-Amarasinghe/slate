@@ -79,7 +79,11 @@ class TodayWidgetProvider : HomeWidgetProvider() {
                 val title = widgetData.getString("widget_task_title_$i", null) ?: continue
                 val taskId = widgetData.getString("widget_task_id_$i", null)
                 val subtaskProgress = widgetData.getString("widget_task_subtasks_$i", null)
-                setTextViewText(rowId, rowLabel(context, title, markCompleteOnTap, subtaskProgress))
+                val isOverdue = widgetData.getBoolean("widget_task_overdue_$i", false)
+                setTextViewText(
+                    rowId,
+                    rowLabel(context, title, markCompleteOnTap, subtaskProgress, isOverdue),
+                )
                 setViewVisibility(rowId, View.VISIBLE)
 
                 val rowIntent =
@@ -106,40 +110,66 @@ class TodayWidgetProvider : HomeWidgetProvider() {
   }
 
   /**
-   * "○ Title  2/5" (mark-complete mode) or "• Title  2/5" (open-detail
-   * mode). The mark-complete circle is sized up via a span rather than
-   * bumping the whole row's text size — it's meant to read as a real
-   * checkbox-style tap target, not just a bigger list marker. The
+   * "○ Title  2/5  Overdue" (mark-complete mode) or "• Title  2/5  Overdue"
+   * (open-detail mode). The mark-complete circle is sized up via a span
+   * rather than bumping the whole row's text size — it's meant to read as a
+   * real checkbox-style tap target, not just a bigger list marker. The
    * subtask-progress suffix (when the task has a checklist) is a
    * glanceable label only: RemoteViews rows are a single tap target, so
    * there's no way to check off an individual subtask from the widget —
-   * that still means opening the task.
+   * that still means opening the task. "Overdue" is the app's one sparing
+   * accent color (see widget_accent in colors.xml) — the only other place
+   * that color shows up anywhere in the app.
    */
   private fun rowLabel(
       context: Context,
       title: String,
       markCompleteOnTap: Boolean,
       subtaskProgress: String?,
+      isOverdue: Boolean,
   ): CharSequence {
     val bullet = if (markCompleteOnTap) "○" else "•"
     val hasProgress = !subtaskProgress.isNullOrEmpty()
-    val text = "$bullet  $title" + if (hasProgress) "   $subtaskProgress" else ""
+    val text = buildString {
+      append(bullet)
+      append("  ")
+      append(title)
+      if (hasProgress) {
+        append("   ")
+        append(subtaskProgress)
+      }
+      if (isOverdue) {
+        append("   ")
+        append("Overdue")
+      }
+    }
 
-    if (!markCompleteOnTap && !hasProgress) return text
+    if (!markCompleteOnTap && !hasProgress && !isOverdue) return text
 
     return SpannableString(text).apply {
       if (markCompleteOnTap) {
         setSpan(RelativeSizeSpan(1.5f), 0, bullet.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
       }
       if (hasProgress) {
-        val progressStart = text.length - subtaskProgress!!.length
+        val progressStart = text.indexOf(subtaskProgress!!)
+        val progressEnd = progressStart + subtaskProgress.length
         setSpan(
             ForegroundColorSpan(ContextCompat.getColor(context, R.color.widget_text_secondary)),
             progressStart,
+            progressEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
+        setSpan(RelativeSizeSpan(0.85f), progressStart, progressEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+      }
+      if (isOverdue) {
+        val overdueStart = text.length - "Overdue".length
+        setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context, R.color.widget_accent)),
+            overdueStart,
             text.length,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
-        setSpan(RelativeSizeSpan(0.85f), progressStart, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        setSpan(RelativeSizeSpan(0.85f), overdueStart, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
       }
     }
   }

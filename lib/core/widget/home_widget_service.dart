@@ -41,10 +41,12 @@ class HomeWidgetService {
             'widget_task_subtasks_$i',
             rows[i].subtaskProgress,
           );
+          await HomeWidget.saveWidgetData<bool>('widget_task_overdue_$i', rows[i].isOverdue);
         } else {
           await HomeWidget.saveWidgetData<String>('widget_task_title_$i', null);
           await HomeWidget.saveWidgetData<String>('widget_task_id_$i', null);
           await HomeWidget.saveWidgetData<String>('widget_task_subtasks_$i', null);
+          await HomeWidget.saveWidgetData<bool>('widget_task_overdue_$i', false);
         }
       }
       await HomeWidget.updateWidget(qualifiedAndroidName: androidQualifiedName);

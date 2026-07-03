@@ -8,4 +8,6 @@
     <color name="widget_divider">#1AFFFFFF</color>
     <color name="widget_add_button_bg">#EDEDED</color>
     <color name="widget_add_button_fg">#000000</color>
+    <!-- Matches lib/core/theme/tokens/color_tokens.dart's accentDefaultOnDark. -->
+    <color name="widget_accent">#5B8DFF</color>
 </resources>

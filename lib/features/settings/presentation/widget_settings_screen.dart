@@ -143,7 +143,7 @@ class WidgetSettingsScreen extends ConsumerWidget {
   static const List<WidgetTaskRow> _exampleWidgetRows = <WidgetTaskRow>[
     WidgetTaskRow(id: '_example_1', title: 'Buy groceries'),
     WidgetTaskRow(id: '_example_2', title: 'Finish the report', subtaskProgress: '2/4'),
-    WidgetTaskRow(id: '_example_3', title: 'Call the dentist'),
+    WidgetTaskRow(id: '_example_3', title: 'Call the dentist', isOverdue: true),
   ];
 
   String _filterLabel(WidgetFilterMode mode) => switch (mode) {
@@ -180,6 +180,10 @@ class _WidgetPreview extends StatelessWidget {
     final Color divider = isDark ? const Color(0x1AFFFFFF) : const Color(0x14000000);
     final Color addButtonBg = isDark ? const Color(0xFFEDEDED) : const Color(0xFF161616);
     final Color addButtonFg = isDark ? const Color(0xFF000000) : const Color(0xFFFFFFFF);
+    // Matches android colors.xml's widget_accent exactly — the widget
+    // always follows system brightness, not this app's own theme/accent
+    // setting, so this can't just read Theme.of(context).colorScheme.primary.
+    final Color overdueColor = isDark ? const Color(0xFF5B8DFF) : const Color(0xFF2F6FED);
     const String fontFamily = 'Plus Jakarta Sans';
 
     return Container(
@@ -251,6 +255,11 @@ class _WidgetPreview extends StatelessWidget {
                         TextSpan(
                           text: '   ${task.subtaskProgress}',
                           style: TextStyle(fontSize: 12, color: textSecondary),
+                        ),
+                      if (task.isOverdue)
+                        TextSpan(
+                          text: '   Overdue',
+                          style: TextStyle(fontSize: 12, color: overdueColor),
                         ),
                     ],
                   ),

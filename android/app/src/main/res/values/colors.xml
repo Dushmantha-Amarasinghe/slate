@@ -12,4 +12,7 @@
     <color name="widget_divider">#14000000</color>
     <color name="widget_add_button_bg">#161616</color>
     <color name="widget_add_button_fg">#FFFFFF</color>
+    <!-- Matches lib/core/theme/tokens/color_tokens.dart's accentDefault —
+         the app's one sparing accent, used here only for the "Overdue" tag. -->
+    <color name="widget_accent">#2F6FED</color>
 </resources>

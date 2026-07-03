@@ -10,23 +10,35 @@ import '../../features/today/application/today_controller.dart';
 /// pre-formatted "2/5" label (null when the task has no subtasks) rather
 /// than raw counts, since the native RemoteViews layout just drops this
 /// straight into a TextView with no formatting logic of its own.
+/// [isOverdue] is calendar-day based (due before today), matching
+/// [filterTasksForWidget]'s own definition — a task due earlier today isn't
+/// "overdue" yet, just due today.
 class WidgetTaskRow {
-  const WidgetTaskRow({required this.id, required this.title, this.subtaskProgress});
+  const WidgetTaskRow({
+    required this.id,
+    required this.title,
+    this.subtaskProgress,
+    this.isOverdue = false,
+  });
 
   final String id;
   final String title;
   final String? subtaskProgress;
+  final bool isOverdue;
 }
 
 /// Pure so it's directly unit-testable and so
 /// core/widget/widget_background_handler.dart (a separate isolate with no
 /// ProviderContainer) can build the same rows after a background
-/// mark-complete tap.
-List<WidgetTaskRow> buildWidgetRows(List<Task> tasks, List<Subtask> allSubtasks) {
+/// mark-complete tap. [now] is only ever overridden by tests.
+List<WidgetTaskRow> buildWidgetRows(List<Task> tasks, List<Subtask> allSubtasks, {DateTime? now}) {
   final Map<String, List<Subtask>> subtasksByTaskId = <String, List<Subtask>>{};
   for (final Subtask subtask in allSubtasks) {
     subtasksByTaskId.putIfAbsent(subtask.taskId, () => <Subtask>[]).add(subtask);
   }
+
+  final DateTime effectiveNow = now ?? DateTime.now();
+  final DateTime todayStart = DateTime(effectiveNow.year, effectiveNow.month, effectiveNow.day);
 
   return <WidgetTaskRow>[
     for (final Task task in tasks)
@@ -39,6 +51,7 @@ List<WidgetTaskRow> buildWidgetRows(List<Task> tasks, List<Subtask> allSubtasks)
           final int completed = subtasks.where((Subtask s) => s.isCompleted).length;
           return '$completed/${subtasks.length}';
         }(),
+        isOverdue: task.dueDateTimeLocal != null && task.dueDateTimeLocal!.isBefore(todayStart),
       ),
   ];
 }
