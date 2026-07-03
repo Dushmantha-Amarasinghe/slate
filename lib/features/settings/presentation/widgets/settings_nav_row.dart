@@ -33,7 +33,7 @@ class SettingsNavRow extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Icon(icon, size: 20, color: muted),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
