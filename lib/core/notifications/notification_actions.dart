@@ -5,7 +5,10 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../../data/repositories/reminder_repository.dart';
+import '../../data/repositories/settings_repository.dart';
 import '../db/database.dart';
+import 'alarm_scheduler.dart';
 import 'notification_service.dart';
 
 String encodeReminderPayload({
@@ -92,8 +95,15 @@ Future<void> _snoozeReminder(String taskId, int notificationId) async {
     final DateTime snoozeUntil = DateTime.now().toUtc().add(
       const Duration(minutes: 15),
     );
-    await NotificationService.scheduleReminder(
-      notificationId: notificationId,
+    // Goes through AlarmScheduler (not NotificationService directly) so the
+    // Reminders table row's triggerTimeUtc gets updated to the new snoozed
+    // time, not just the native alarm. Leaving the DB row pointing at the
+    // original (now past) time was the actual bug behind "snoozed reminder
+    // fires repeatedly" — the boot/app-open resync sweep (reminder_resync.dart)
+    // reads that stale row on every startup, sees a trigger time already in
+    // the past, and reschedules it for a couple seconds from now, silently
+    // overriding the snooze every time the app was reopened.
+    await AlarmScheduler(ReminderRepository(db), SettingsRepository(db)).scheduleForTask(
       taskId: taskId,
       taskTitle: task.title,
       triggerTimeUtc: snoozeUntil,
