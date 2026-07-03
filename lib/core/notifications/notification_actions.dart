@@ -48,18 +48,29 @@ void handleNotificationResponseBackground(NotificationResponse response) {
   _handleAction(response);
 }
 
-void _handleAction(NotificationResponse response) {
+void _handleAction(NotificationResponse response) async {
   final Map<String, Object?>? data = _decodeReminderPayload(response.payload);
   if (data == null) return;
 
   final String taskId = data['taskId']! as String;
   final int notificationId = data['notificationId']! as int;
 
+  // This can run in a fresh background isolate spun up just for this tap
+  // (the app process wasn't running) — that isolate never went through
+  // main()'s startup, so NotificationService's timezone data (tz.local)
+  // is uninitialized. Without this, scheduling the snoozed alarm threw an
+  // uncaught LateInitializationError *before* the Reminders table got
+  // updated, leaving its triggerTimeUtc stuck in the past — which is what
+  // made the next resync sweep re-fire the "snoozed" reminder within
+  // seconds. initialize() is idempotent (guarded by _initialized), so this
+  // is a no-op when already run in this isolate (the normal foreground case).
+  await NotificationService.initialize();
+
   switch (response.actionId) {
     case NotificationService.actionDone:
-      _markTaskDone(taskId, notificationId);
+      await _markTaskDone(taskId, notificationId);
     case NotificationService.actionSnooze:
-      _snoozeReminder(taskId, notificationId);
+      await _snoozeReminder(taskId, notificationId);
   }
 }
 
