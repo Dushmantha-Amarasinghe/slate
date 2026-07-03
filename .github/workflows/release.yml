@@ -37,7 +37,9 @@ jobs:
           EOF
 
       - run: flutter analyze
-      - run: flutter test
+      # See ci.yml for why golden tests are excluded from this gate
+      # (Windows-recorded baselines vs. Linux font rendering).
+      - run: flutter test test/unit test/widget test/migration test/widget_test.dart
 
       - name: Build signed release APK
         run: flutter build apk --release
