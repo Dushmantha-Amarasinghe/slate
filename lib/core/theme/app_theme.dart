@@ -25,6 +25,23 @@ class AppTheme {
       onPrimary: Colors.white,
       error: AppColors.destructive,
       onError: Colors.white,
+      // Material 3 components fall back to these (secondary/tertiary) for
+      // all sorts of default state-layer/overlay colors we never asked
+      // for — a Switch's press ripple, a selected Chip's fill if our own
+      // chipTheme override ever misses a state, etc. Left unset, Flutter's
+      // baseline scheme fills them with its own default hues (a muted
+      // purple/teal), which is how a stray off-brand color flash showed up
+      // on ordinary taps throughout the app. Pointing every one of these at
+      // the existing grayscale tokens closes that off for good, everywhere
+      // at once, instead of chasing it widget theme by widget theme.
+      secondary: AppColors.lightGraySteps[1],
+      onSecondary: Colors.white,
+      secondaryContainer: AppColors.lightGraySteps[4],
+      onSecondaryContainer: const Color(0xFF161616),
+      tertiary: AppColors.lightGraySteps[1],
+      onTertiary: Colors.white,
+      tertiaryContainer: AppColors.lightGraySteps[4],
+      onTertiaryContainer: const Color(0xFF161616),
     );
 
     return _base(scheme, AppColors.lightGraySteps, AppColors.lightBackground);
@@ -38,6 +55,15 @@ class AppTheme {
       onPrimary: Colors.black,
       error: AppColors.destructiveOnDark,
       onError: Colors.black,
+      // See the matching comment in light() above.
+      secondary: AppColors.darkGraySteps[1],
+      onSecondary: Colors.black,
+      secondaryContainer: AppColors.darkGraySteps[4],
+      onSecondaryContainer: const Color(0xFFEDEDED),
+      tertiary: AppColors.darkGraySteps[1],
+      onTertiary: Colors.black,
+      tertiaryContainer: AppColors.darkGraySteps[4],
+      onTertiaryContainer: const Color(0xFFEDEDED),
     );
 
     return _base(scheme, AppColors.darkGraySteps, AppColors.darkBackground);
@@ -90,7 +116,14 @@ class AppTheme {
         foregroundColor: scheme.onPrimary,
       ),
       dividerTheme: DividerThemeData(color: graySteps[3], thickness: 0.6),
-      splashFactory: InkSparkle.splashFactory,
+      // Material 3's default splash on Android is InkSparkle, which uses a
+      // noise/sparkle fragment shader — on a lot of real GPUs (especially
+      // budget/mid-range ones) that shader renders with a visible colored
+      // (often teal/green) tint or fringing during the ripple, which read as
+      // a stray accent flash on every tap across the whole app. InkRipple is
+      // a plain expanding-circle ripple with no shader, so no color
+      // artifact, at the cost of the (purely decorative) sparkle texture.
+      splashFactory: InkRipple.splashFactory,
       // Text fields (task title/description, tag names, the "type DELETE"
       // confirmation, etc.) default their focused border/cursor to
       // `colorScheme.primary` (accent blue) in stock Material 3 — same
