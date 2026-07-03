@@ -1,0 +1,170 @@
+name: slate
+description: "Slate — a premium, offline-first to-do app by Refora Technologies"
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+
+  # State management (Phase 0+: theming/settings providers; Phase 1+: data providers)
+  flutter_riverpod: ^2.6.1
+
+  # Navigation
+  go_router: ^15.1.2
+
+  # Custom SVG icon set
+  flutter_svg: ^2.1.0
+
+  # Motion/choreography for the signature animated moments
+  flutter_animate: ^4.5.2
+
+  # Local database (Phase 1: Tasks/Tags/Subtasks/Reminders/AppSettings)
+  drift: ^2.23.1
+  sqlite3_flutter_libs: ^0.5.28
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  uuid: ^4.5.1
+
+  # Reminders & notifications (Phase 3)
+  flutter_local_notifications: ^19.4.2
+  timezone: ^0.10.1
+  flutter_timezone: ^4.1.1
+  permission_handler: ^12.0.1
+
+  # Voice notes (Phase 5)
+  record: ^6.1.1
+  just_audio: ^0.10.5
+
+  # Settings & onboarding (Phase 6): JSON backup export/import, sharing an
+  # export or a downloaded update APK, current app version for the update
+  # checker, and the GitHub Releases HTTP call.
+  file_picker: ^11.0.2
+  share_plus: ^11.0.0
+  package_info_plus: ^8.3.0
+  http: ^1.2.2
+  url_launcher: ^6.3.1
+  shared_preferences: ^2.3.5
+
+  # In-app update installer: hands a downloaded APK off to the system
+  # installer via a FileProvider content:// URI (the plugin auto-merges its
+  # own <provider> manifest entry, same pattern as flutter_local_notifications'
+  # receivers).
+  open_filex: ^4.5.0
+
+  # Home screen widget (Phase 7): pushes today's top N tasks to a native
+  # Android App Widget and handles its quick-add tap target.
+  home_widget: ^0.9.3
+  # Long-press launcher shortcuts (Add Task, Today).
+  quick_actions: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  drift_dev: ^2.23.1
+  build_runner: ^2.4.15
+  # Used directly (not just transitively via drift) by the migration test to
+  # hand-construct an old-schema database file before opening it with the
+  # real AppDatabase and its real MigrationStrategy.
+  sqlite3: ^2.4.6
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^6.0.0
+
+  # App icon + native splash generation, driven from source art in assets/branding/
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  # Enables AppLocalizations codegen from lib/l10n/app_en.arb (see l10n.yaml).
+  generate: true
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+    - assets/icons/outline/
+    - assets/icons/filled/
+    - assets/illustrations/
+    - assets/branding/
+
+  # Self-hosted Plus Jakarta Sans variable font (assets/fonts/) — bundled
+  # rather than fetched at runtime, so typography never depends on a
+  # network call. Multiple weight entries pointing at the same
+  # variable-font file is the standard Flutter pattern for selecting named
+  # instances from it.
+  fonts:
+    - family: Plus Jakarta Sans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Variable.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-Italic-Variable.ttf
+          weight: 400
+          style: italic
+
+# flutter_launcher_icons config — regenerate with `dart run flutter_launcher_icons`.
+# Source art (assets/branding/app_icon.png) is a placeholder brand mark; swap the
+# PNG for final art later and rerun, no config change needed.
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/branding/app_icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/branding/app_icon.png"
+
+# flutter_native_splash config — regenerate with `dart run flutter_native_splash:create`.
+# Theme-aware (separate light/dark background) so there's no flash-of-wrong-theme.
+flutter_native_splash:
+  color: "#FAFAFA"
+  image: "assets/branding/splash_logo_light_bg.png"
+  color_dark: "#000000"
+  image_dark: "assets/branding/splash_logo_dark_bg.png"
+  android_12:
+    color: "#FAFAFA"
+    image: "assets/branding/splash_logo_light_bg.png"
+    color_dark: "#000000"
+    image_dark: "assets/branding/splash_logo_dark_bg.png"

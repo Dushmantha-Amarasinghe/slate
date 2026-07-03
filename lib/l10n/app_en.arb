@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appName": "Slate",
+  "@appName": {
+    "description": "The app's display name"
+  },
+  "navToday": "Today",
+  "navAllTasks": "All Tasks",
+  "navStats": "Stats",
+  "actionSearch": "Search",
+  "actionSettings": "Settings"
+}

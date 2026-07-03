@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Today widget (Phase 7) — dark-mode palette, mirrors
+         lib/core/theme/tokens/color_tokens.dart's darkGraySteps/darkBackground. -->
+    <color name="widget_background">#1A1A1A</color>
+    <color name="widget_text_primary">#EDEDED</color>
+    <color name="widget_text_secondary">#8A8A8A</color>
+    <color name="widget_divider">#1AFFFFFF</color>
+    <color name="widget_add_button_bg">#EDEDED</color>
+    <color name="widget_add_button_fg">#000000</color>
+</resources>

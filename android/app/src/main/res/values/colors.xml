@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#000000</color>
+
+    <!-- Today widget (Phase 7) — light-mode palette, mirrors
+         lib/core/theme/tokens/color_tokens.dart's lightGraySteps/lightBackground.
+         Widgets render outside the Flutter engine so these can't read the
+         token file directly; values-night/colors.xml holds the dark pair. -->
+    <color name="widget_background">#FFFFFF</color>
+    <color name="widget_text_primary">#161616</color>
+    <color name="widget_text_secondary">#6E6E6E</color>
+    <color name="widget_divider">#14000000</color>
+    <color name="widget_add_button_bg">#161616</color>
+    <color name="widget_add_button_fg">#FFFFFF</color>
+</resources>
