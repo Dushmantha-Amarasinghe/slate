@@ -161,6 +161,26 @@ class AppTheme {
           borderRadius: BorderRadius.circular(radius.AppRadius.lg),
         ),
       ),
+      // Same rationale as dialogTheme/bottomSheetTheme: left at Material 3's
+      // default, a popup menu's surface tone in dark mode is nearly
+      // indistinguishable from the true-black scaffold behind it, so it's
+      // barely legible as a floating menu at all (Search's Date/Priority/Tag
+      // dropdowns). One step lighter plus a visible border makes the menu
+      // boundary legible in both themes.
+      popupMenuTheme: PopupMenuThemeData(
+        color: graySteps[5],
+        surfaceTintColor: Colors.transparent,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius.AppRadius.md),
+          side: BorderSide(color: scheme.onSurface.withValues(alpha: 0.12)),
+        ),
+        textStyle: TextStyle(
+          fontFamily: AppTypography.fontFamily,
+          color: scheme.onSurface,
+          fontSize: 15,
+        ),
+      ),
       // Same rationale as dialogTheme above: a bottom sheet left to
       // Material 3's default resolves to a surface tone that's nearly
       // identical to the scaffold background in dark mode, so it reads as
