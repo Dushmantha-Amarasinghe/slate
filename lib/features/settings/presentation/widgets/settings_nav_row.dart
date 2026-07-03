@@ -49,6 +49,7 @@ class SettingsNavRow extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(width: AppSpacing.sm),
             if (trailing != null)
               trailing!
             else if (onTap != null)

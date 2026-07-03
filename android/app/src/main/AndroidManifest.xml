@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- Settings > Notifications & Reminders' "Battery optimization" row —
+         without this declared, permission_handler's
+         ignoreBatteryOptimizations.request() silently no-ops instead of
+         showing the system exemption dialog. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <!-- Voice notes (Phase 5): local mic capture only, no cloud upload. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- In-app update checker (Phase 6): the only thing that ever touches
