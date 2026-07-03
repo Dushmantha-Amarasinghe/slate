@@ -6,8 +6,10 @@ with one sparing accent color, built with Flutter + Riverpod + Drift.
 ## Install & updates
 
 Slate is distributed via [GitHub Releases](../../releases) only — it is not
-on the Play Store. Download the latest `slate-vX.Y.Z.apk`, allow "install
-unknown apps" for your browser/file manager when prompted, and install it.
+on the Play Store. Download
+[the latest slate.apk](../../releases/latest/download/slate.apk) — this link
+always points at the newest release — allow "install unknown apps" for your
+browser/file manager when prompted, and install it.
 
 After that, the app checks for updates itself: on launch (at most once an
 hour) and via Settings → Updates → "Check for updates". When a newer release

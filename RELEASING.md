@@ -39,12 +39,11 @@ The release workflow decodes the keystore into `android/app/release.jks` and
 writes `android/key.properties` at build time, then deletes both once the
 build finishes (`if: always()` cleanup step) — neither ever gets committed.
 
-### 3. Publish a privacy policy
+### 3. Privacy policy
 
-The app requests RECORD_AUDIO, POST_NOTIFICATIONS, and "install unknown
-apps" — publish a short privacy policy (a GitHub Pages page off this repo is
-the easiest option) stating plainly that nothing leaves the device, and link
-it from Settings → About.
+Published via GitHub Pages from `docs/privacy/index.html` — enable it once
+under Settings → Pages → Deploy from a branch → `main` / `/docs`. Linked from
+Settings → About in the app.
 
 ## Cutting a release
 
@@ -55,12 +54,13 @@ it from Settings → About.
    git tag vX.Y.Z
    git push origin vX.Y.Z
    ```
-4. The `Release` workflow builds a signed `slate-vX.Y.Z.apk`, runs
-   `flutter analyze`/`flutter test` first, computes its SHA-256 checksum,
-   and publishes both as a GitHub Release with auto-generated notes from
-   the commits since the last tag. Edit the release body afterward into
-   short, user-facing language — it's shown directly in the app's
-   "Update available" card.
+4. The `Release` workflow builds a signed `slate.apk` (same filename on
+   every release, so `.../releases/latest/download/slate.apk` always works),
+   runs `flutter analyze`/`flutter test` first, computes its SHA-256
+   checksum, and publishes both as a GitHub Release with auto-generated
+   notes from the commits since the last tag. Edit the release body
+   afterward into short, user-facing language — it's shown directly in the
+   app's "Update available" card.
 
 ## Verifying the end-to-end update flow
 

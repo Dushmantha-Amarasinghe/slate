@@ -51,18 +51,22 @@ jobs:
         run: flutter build apk --release
 
       - name: Name and checksum the release asset
+        # The asset name stays fixed across every release (not
+        # slate-vX.Y.Z.apk) so there's always one unchanging download link:
+        # .../releases/latest/download/slate.apk. The version still lives on
+        # the git tag and the GitHub Release page itself.
         run: |
           mkdir -p release-out
-          cp build/app/outputs/flutter-apk/app-release.apk "release-out/slate-${GITHUB_REF_NAME}.apk"
+          cp build/app/outputs/flutter-apk/app-release.apk release-out/slate.apk
           cd release-out
-          sha256sum "slate-${GITHUB_REF_NAME}.apk" > "slate-${GITHUB_REF_NAME}.apk.sha256"
+          sha256sum slate.apk > slate.apk.sha256
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release-out/slate-${{ github.ref_name }}.apk
-            release-out/slate-${{ github.ref_name }}.apk.sha256
+            release-out/slate.apk
+            release-out/slate.apk.sha256
           generate_release_notes: true
 
       - name: Clean up signing material
