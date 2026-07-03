@@ -9,7 +9,7 @@ import 'update_prefs.dart';
 /// GitHub owner/repo the update checker polls. Release assets must include
 /// exactly one APK named `slate-vX.Y.Z.apk` (see section 8 of the build
 /// plan) so [UpdateCheckerService] can pick it out unambiguously.
-const String kUpdateRepoOwner = 'reforatech';
+const String kUpdateRepoOwner = 'Dushmantha-Amarasinghe';
 const String kUpdateRepoName = 'slate';
 
 const Duration kAutoCheckThrottle = Duration(hours: 1);

@@ -106,13 +106,13 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
                 SettingsNavRow(
                   icon: Icons.privacy_tip_outlined,
                   title: 'Privacy policy',
-                  onTap: () => _openUrl('https://reforatech.github.io/slate/privacy'),
+                  onTap: () => _openUrl('https://dushmantha-amarasinghe.github.io/slate/privacy/'),
                 ),
                 const SettingsRowDivider(),
                 SettingsNavRow(
                   icon: Icons.code_outlined,
                   title: 'Source on GitHub',
-                  onTap: () => _openUrl('https://github.com/reforatech/slate'),
+                  onTap: () => _openUrl('https://github.com/Dushmantha-Amarasinghe/slate'),
                 ),
                 const SettingsRowDivider(),
                 SettingsNavRow(
