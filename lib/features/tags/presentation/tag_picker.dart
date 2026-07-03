@@ -13,12 +13,15 @@ import '../application/tag_controller.dart';
 /// "New tag" action — distinct from any real tag id.
 const String _createTagSentinel = '__create_tag__';
 
-/// Single-select tag picker (a Task has at most one tag). Three shapes
-/// depending on how many tags exist, so this never becomes either an
-/// empty dead end or an unreadably long chip row:
-/// - No tags yet: one-tap premade category suggestions plus "Custom".
-/// - A handful of tags: the existing chip row, plus a trailing "+" chip.
-/// - Many tags: a single dropdown trigger, like Search's filter chips.
+/// Single-select tag picker (a Task has at most one tag). Two shapes:
+/// - A handful of real tags: every real tag as a selectable chip, PLUS
+///   whichever premade category suggestions haven't been created yet (so
+///   picking "Work" doesn't remove "Home"/"Shopping"/etc. from view — the
+///   only thing that disappears from the suggestion list is the one that
+///   just became a real tag), plus "Custom". Selecting or deselecting a
+///   chip never hides any of the others.
+/// - Many real tags: a single dropdown trigger, like Search's filter chips
+///   — a chip row that long stops being scannable at a glance.
 class TagPicker extends ConsumerWidget {
   const TagPicker({
     super.key,
@@ -29,8 +32,10 @@ class TagPicker extends ConsumerWidget {
   final String? selectedTagId;
   final ValueChanged<String?> onChanged;
 
-  /// Above this many tags, a chip row stops being scannable at a glance
-  /// and a dropdown reads better.
+  /// Above this many real tags, a chip row stops being scannable at a
+  /// glance and a dropdown reads better. Premade suggestions don't count
+  /// toward this — once the user has this many tags of their own, they've
+  /// outgrown the suggestion list anyway.
   static const int _dropdownThreshold = 6;
 
   @override
@@ -41,9 +46,6 @@ class TagPicker extends ConsumerWidget {
       loading: () => const SizedBox(height: 40),
       error: (Object _, StackTrace _) => const SizedBox.shrink(),
       data: (List<Tag> tags) {
-        if (tags.isEmpty) {
-          return _SuggestedTagChips(onChanged: onChanged);
-        }
         if (tags.length > _dropdownThreshold) {
           return _TagDropdown(tags: tags, selectedTagId: selectedTagId, onChanged: onChanged);
         }
@@ -129,39 +131,10 @@ Future<void> _showCreateTagDialog(
   if (createdTagId != null) onChanged(createdTagId);
 }
 
-/// Empty state: no tags exist yet, so a bare "+ New tag" button is a dead
-/// end that forces typing before the feature feels useful at all — these
-/// one-tap common categories get a first tag picked in a single gesture.
-class _SuggestedTagChips extends ConsumerWidget {
-  const _SuggestedTagChips({required this.onChanged});
-
-  final ValueChanged<String?> onChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Wrap(
-      spacing: AppSpacing.xs,
-      runSpacing: AppSpacing.xs,
-      children: <Widget>[
-        for (final (String name, String iconRef) suggestion in kSuggestedTags)
-          _TagChip(
-            label: suggestion.$1,
-            icon: tagIconFor(suggestion.$2),
-            selected: false,
-            onTap: () async {
-              final String id = await ref
-                  .read(tagRepositoryProvider)
-                  .addTag(name: suggestion.$1, iconRef: suggestion.$2);
-              onChanged(id);
-            },
-          ),
-        _NewTagChip(label: 'Custom', onTap: () => _showCreateTagDialog(context, ref, onChanged)),
-      ],
-    );
-  }
-}
-
-/// A handful of tags: the original always-visible chip row.
+/// A handful of tags: every real tag as a selectable chip, plus whichever
+/// premade suggestions haven't been created yet (by name, case-insensitive),
+/// plus "Custom". Nothing here is ever hidden by selecting/deselecting a
+/// chip — that only toggles which one is highlighted.
 class _TagChipRow extends ConsumerWidget {
   const _TagChipRow({required this.tags, required this.selectedTagId, required this.onChanged});
 
@@ -171,6 +144,11 @@ class _TagChipRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Set<String> existingNames = tags.map((Tag t) => t.name.toLowerCase()).toSet();
+    final List<(String, String)> remainingSuggestions = kSuggestedTags
+        .where(((String, String) s) => !existingNames.contains(s.$1.toLowerCase()))
+        .toList();
+
     return Wrap(
       spacing: AppSpacing.xs,
       runSpacing: AppSpacing.xs,
@@ -182,8 +160,20 @@ class _TagChipRow extends ConsumerWidget {
             selected: tag.id == selectedTagId,
             onTap: () => onChanged(tag.id == selectedTagId ? null : tag.id),
           ),
+        for (final (String, String) suggestion in remainingSuggestions)
+          _TagChip(
+            label: suggestion.$1,
+            icon: tagIconFor(suggestion.$2),
+            selected: false,
+            onTap: () async {
+              final String id = await ref
+                  .read(tagRepositoryProvider)
+                  .addTag(name: suggestion.$1, iconRef: suggestion.$2);
+              onChanged(id);
+            },
+          ),
         _NewTagChip(
-          label: 'New tag',
+          label: 'Custom',
           onTap: () => _showCreateTagDialog(context, ref, onChanged),
         ),
       ],
