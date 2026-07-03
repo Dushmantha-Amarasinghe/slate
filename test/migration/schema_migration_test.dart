@@ -28,15 +28,15 @@ const String _tagsSql =
     'PRIMARY KEY ("id"), UNIQUE ("name"));';
 
 const String _subtasksSql =
-    'CREATE TABLE "subtasks" ("id" TEXT NOT NULL, "task_id" TEXT NOT NULL '
-    'REFERENCES tasks (id), "title" TEXT NOT NULL, "is_completed" INTEGER '
+    'CREATE TABLE "subtasks" ("id" TEXT NOT NULL, "task_id" TEXT NOT NULL, '
+    '"title" TEXT NOT NULL, "is_completed" INTEGER '
     'NOT NULL DEFAULT 0 CHECK ("is_completed" IN (0, 1)), "sort_order" '
     'INTEGER NOT NULL DEFAULT 0, "created_at" INTEGER NOT NULL, '
     '"updated_at" INTEGER NOT NULL, PRIMARY KEY ("id"));';
 
 const String _remindersSql =
-    'CREATE TABLE "reminders" ("id" TEXT NOT NULL, "task_id" TEXT NOT NULL '
-    'REFERENCES tasks (id), "trigger_time_utc" INTEGER NOT NULL, '
+    'CREATE TABLE "reminders" ("id" TEXT NOT NULL, "task_id" TEXT NOT NULL, '
+    '"trigger_time_utc" INTEGER NOT NULL, '
     '"is_snoozed" INTEGER NOT NULL DEFAULT 0 CHECK ("is_snoozed" IN (0, 1)), '
     '"snooze_until_utc" INTEGER NULL, "notification_id" INTEGER NOT NULL, '
     '"created_at" INTEGER NOT NULL, PRIMARY KEY ("id"));';
@@ -48,8 +48,8 @@ String _tasksSqlV1() =>
     '"description" TEXT NULL, "due_date_time_local" INTEGER NULL, '
     '"timezone_id" TEXT NULL, "is_recurring" INTEGER NOT NULL DEFAULT 0 '
     'CHECK ("is_recurring" IN (0, 1)), "recurrence_rule" TEXT NULL, '
-    '"priority" INTEGER NOT NULL DEFAULT 0, "tag_id" TEXT NULL REFERENCES '
-    'tags (id), "voice_note_path" TEXT NULL, "is_completed" INTEGER NOT '
+    '"priority" INTEGER NOT NULL DEFAULT 0, "tag_id" TEXT NULL, '
+    '"voice_note_path" TEXT NULL, "is_completed" INTEGER NOT '
     'NULL DEFAULT 0 CHECK ("is_completed" IN (0, 1)), "completed_at" '
     'INTEGER NULL, "sort_order" INTEGER NOT NULL DEFAULT 0, "created_at" '
     'INTEGER NOT NULL, "updated_at" INTEGER NOT NULL, PRIMARY KEY ("id"));';
@@ -63,7 +63,7 @@ String _tasksSqlV2() =>
     'DEFAULT 1 CHECK ("due_date_has_time" IN (0, 1)), "is_recurring" '
     'INTEGER NOT NULL DEFAULT 0 CHECK ("is_recurring" IN (0, 1)), '
     '"recurrence_rule" TEXT NULL, "priority" INTEGER NOT NULL DEFAULT 0, '
-    '"tag_id" TEXT NULL REFERENCES tags (id), "voice_note_path" TEXT NULL, '
+    '"tag_id" TEXT NULL, "voice_note_path" TEXT NULL, '
     '"is_completed" INTEGER NOT NULL DEFAULT 0 CHECK ("is_completed" IN '
     '(0, 1)), "completed_at" INTEGER NULL, "sort_order" INTEGER NOT NULL '
     'DEFAULT 0, "created_at" INTEGER NOT NULL, "updated_at" INTEGER NOT '
@@ -131,6 +131,8 @@ void main() {
     final AppSettingsTableData settings = await migrated.settingsDao.watchSettings().first;
     // Backfilled by the v2->v3 migration's column default.
     expect(settings.widgetTapAction, WidgetTapAction.openDetail);
+    // Backfilled by the v3->v4 migration's column default.
+    expect(settings.urgentReminderSound, isFalse);
 
     await migrated.validateDatabaseSchema();
     await migrated.close();
@@ -161,6 +163,7 @@ void main() {
 
     final AppSettingsTableData settings = await migrated.settingsDao.watchSettings().first;
     expect(settings.widgetTapAction, WidgetTapAction.openDetail);
+    expect(settings.urgentReminderSound, isFalse);
 
     await migrated.validateDatabaseSchema();
     await migrated.close();

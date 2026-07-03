@@ -4,8 +4,8 @@ part of 'backup_dao.dart';
 
 // ignore_for_file: type=lint
 mixin _$BackupDaoMixin on DatabaseAccessor<AppDatabase> {
-  $TagsTable get tags => attachedDatabase.tags;
   $TasksTable get tasks => attachedDatabase.tasks;
+  $TagsTable get tags => attachedDatabase.tags;
   $SubtasksTable get subtasks => attachedDatabase.subtasks;
   $RemindersTable get reminders => attachedDatabase.reminders;
   $AppSettingsTableTable get appSettingsTable =>
@@ -16,10 +16,10 @@ mixin _$BackupDaoMixin on DatabaseAccessor<AppDatabase> {
 class BackupDaoManager {
   final _$BackupDaoMixin _db;
   BackupDaoManager(this._db);
-  $$TagsTableTableManager get tags =>
-      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
   $$TasksTableTableManager get tasks =>
       $$TasksTableTableManager(_db.attachedDatabase, _db.tasks);
+  $$TagsTableTableManager get tags =>
+      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
   $$SubtasksTableTableManager get subtasks =>
       $$SubtasksTableTableManager(_db.attachedDatabase, _db.subtasks);
   $$RemindersTableTableManager get reminders =>

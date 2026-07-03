@@ -7,6 +7,7 @@ import 'package:home_widget/home_widget.dart';
 import '../db/database.dart';
 import '../notifications/alarm_scheduler.dart';
 import '../../data/repositories/reminder_repository.dart';
+import '../../data/repositories/settings_repository.dart';
 import 'home_widget_service.dart';
 import 'widget_tasks_provider.dart';
 
@@ -32,7 +33,7 @@ Future<void> widgetBackgroundCallback(Uri? uri) async {
     final Task? task = await db.taskDao.getTaskById(taskId);
     if (task == null) return;
 
-    final AlarmScheduler alarms = AlarmScheduler(ReminderRepository(db));
+    final AlarmScheduler alarms = AlarmScheduler(ReminderRepository(db), SettingsRepository(db));
     await alarms.cancelForTask(taskId);
     await db.taskDao.updateTask(
       task

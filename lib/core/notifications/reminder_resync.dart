@@ -12,6 +12,13 @@ import 'notification_service.dart';
 Future<void> resyncAllReminders(AppDatabase db) async {
   final List<Reminder> reminders = await db.reminderDao
       .getAllPendingReminders();
+  if (reminders.isEmpty) return;
+
+  final AppSettingsTableData settings = await db.settingsDao.watchSettings().first;
+  final String channelId = NotificationService.channelIdFor(
+    soundEnabled: settings.soundEnabled,
+    urgentSound: settings.urgentReminderSound,
+  );
 
   for (final Reminder reminder in reminders) {
     final Task? task = await db.taskDao.getTaskById(reminder.taskId);
@@ -38,6 +45,7 @@ Future<void> resyncAllReminders(AppDatabase db) async {
       taskId: task.id,
       taskTitle: task.title,
       triggerTimeUtc: triggerTimeUtc,
+      channelId: channelId,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/repositories/reminder_repository.dart';
+import '../../data/repositories/settings_repository.dart';
 import '../db/database.dart';
 import 'notification_service.dart';
 
@@ -10,9 +11,10 @@ import 'notification_service.dart';
 /// deterministically from the task id so it's stable across app restarts
 /// without needing a separate id-allocation table.
 class AlarmScheduler {
-  AlarmScheduler(this._reminders);
+  AlarmScheduler(this._reminders, this._settings);
 
   final ReminderRepository _reminders;
+  final SettingsRepository _settings;
 
   int notificationIdForTask(String taskId) => taskId.hashCode & 0x7FFFFFFF;
 
@@ -24,12 +26,18 @@ class AlarmScheduler {
     required DateTime triggerTimeUtc,
   }) async {
     final int notificationId = notificationIdForTask(taskId);
+    final AppSettingsTableData settings = await _settings.watch().first;
+    final String channelId = NotificationService.channelIdFor(
+      soundEnabled: settings.soundEnabled,
+      urgentSound: settings.urgentReminderSound,
+    );
 
     await NotificationService.scheduleReminder(
       notificationId: notificationId,
       taskId: taskId,
       taskTitle: taskTitle,
       triggerTimeUtc: triggerTimeUtc,
+      channelId: channelId,
     );
 
     final Reminder? existing = await _reminders.getForTask(taskId);
@@ -51,5 +59,8 @@ class AlarmScheduler {
 
 final Provider<AlarmScheduler> alarmSchedulerProvider =
     Provider<AlarmScheduler>((Ref ref) {
-      return AlarmScheduler(ref.watch(reminderRepositoryProvider));
+      return AlarmScheduler(
+        ref.watch(reminderRepositoryProvider),
+        ref.watch(settingsRepositoryProvider),
+      );
     });

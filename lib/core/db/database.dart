@@ -30,7 +30,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -56,6 +56,11 @@ class AppDatabase extends _$AppDatabase {
       // lib/core/db/tables/app_settings_table.dart.
       if (from < 3) {
         await m.addColumn(appSettingsTable, appSettingsTable.widgetTapAction);
+      }
+      // v3 -> v4: urgent (alarm-sound) reminder channel option, see
+      // lib/core/db/tables/app_settings_table.dart.
+      if (from < 4) {
+        await m.addColumn(appSettingsTable, appSettingsTable.urgentReminderSound);
       }
     },
     // Each future schema bump gets one explicit step here, added under

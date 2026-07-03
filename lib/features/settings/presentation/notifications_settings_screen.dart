@@ -213,16 +213,67 @@ class _NotificationsSettingsScreenState extends ConsumerState<NotificationsSetti
         ),
         const SizedBox(height: AppSpacing.sm),
         AppCard(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-          child: SettingsNavRow(
-            icon: Icons.volume_up_outlined,
-            title: 'Notification sound',
-            trailing: Switch(
-              value: settings.soundEnabled,
-              onChanged: (bool value) => ref
-                  .read(settingsControllerProvider)
-                  .update(AppSettingsTableCompanion(soundEnabled: Value<bool>(value))),
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SettingsNavRow(
+                icon: Icons.volume_up_outlined,
+                title: 'Notification sound',
+                trailing: Switch(
+                  value: settings.soundEnabled,
+                  onChanged: (bool value) => ref
+                      .read(settingsControllerProvider)
+                      .update(AppSettingsTableCompanion(soundEnabled: Value<bool>(value))),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Opacity(
+                opacity: settings.soundEnabled ? 1 : 0.4,
+                child: IgnorePointer(
+                  ignoring: !settings.soundEnabled,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Reminder tone', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Urgent uses your device\'s alarm sound instead of the '
+                        'regular notification sound — louder, and hard to miss.',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Wrap(
+                        spacing: AppSpacing.xs,
+                        children: <Widget>[
+                          ChoiceChip(
+                            label: const Text('Standard'),
+                            selected: !settings.urgentReminderSound,
+                            onSelected: (_) => ref
+                                .read(settingsControllerProvider)
+                                .update(
+                                  const AppSettingsTableCompanion(
+                                    urgentReminderSound: Value<bool>(false),
+                                  ),
+                                ),
+                          ),
+                          ChoiceChip(
+                            label: const Text('Urgent'),
+                            selected: settings.urgentReminderSound,
+                            onSelected: (_) => ref
+                                .read(settingsControllerProvider)
+                                .update(
+                                  const AppSettingsTableCompanion(
+                                    urgentReminderSound: Value<bool>(true),
+                                  ),
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],

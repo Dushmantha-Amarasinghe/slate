@@ -40,6 +40,12 @@ class AppSettingsTable extends Table {
   BoolColumn get hapticsEnabled =>
       boolean().withDefault(const Constant(true))();
   BoolColumn get soundEnabled => boolean().withDefault(const Constant(true))();
+  // A distinct notification channel using the device's default ALARM sound
+  // (louder/more insistent, typically bypasses the media volume slider)
+  // instead of the default notification sound — see
+  // core/notifications/notification_service.dart's channelIdFor.
+  BoolColumn get urgentReminderSound =>
+      boolean().withDefault(const Constant(false))();
   BoolColumn get reduceMotion => boolean().withDefault(const Constant(false))();
 
   IntColumn get defaultSort =>
