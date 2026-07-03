@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Slate</title>
+<meta name="description" content="Privacy Policy for Slate, a to-do app by Refora Technologies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAFA;
+    --surface: #FFFFFF;
+    --card: #EFEFEF;
+    --text-primary: #161616;
+    --text-secondary: #444444;
+    --text-tertiary: #6E6E6E;
+    --divider: #D8D8D8;
+    --accent: #2F6FED;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --surface: #0A0A0A;
+      --card: #1A1A1A;
+      --text-primary: #EDEDED;
+      --text-secondary: #B8B8B8;
+      --text-tertiary: #8A8A8A;
+      --divider: #2E2E2E;
+      --accent: #5B8DFF;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+
+  .mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--text-primary);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .brand-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.1px;
+  }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin: 0 0 6px;
+  }
+
+  .updated {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    margin-bottom: 36px;
+  }
+
+  .lede {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+  }
+
+  .lede strong {
+    color: var(--text-primary);
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 40px 0 12px;
+    letter-spacing: -0.1px;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+  }
+
+  ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
+    color: var(--text-secondary);
+  }
+
+  li {
+    margin-bottom: 8px;
+  }
+
+  li strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--divider);
+    margin: 44px 0;
+    border: none;
+  }
+
+  footer {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  footer a {
+    color: var(--text-tertiary);
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark">S</div>
+      <div>
+        <div class="brand-name">Slate</div>
+        <div class="brand-sub">by Refora Technologies</div>
+      </div>
+    </header>
+
+    <h1>Privacy Policy</h1>
+    <div class="updated">Last updated July 3, 2026</div>
+
+    <div class="lede">
+      <strong>Short version:</strong> Slate is an offline-first app. There's no account, no server, no
+      analytics, and no ad tracking. Your tasks, tags, and voice notes are stored only on your device,
+      inside the app's own private storage.
+    </div>
+
+    <h2>What Slate stores</h2>
+    <p>Everything you create in Slate — tasks, tags, subtasks, reminders, and settings — is saved in a
+      local database on your device. Voice notes you record are saved as audio files in the app's
+      private storage folder. None of this is uploaded anywhere; Slate has no backend server to send it
+      to.</p>
+
+    <h2>Permissions Slate asks for, and why</h2>
+    <ul>
+      <li><strong>Notifications</strong> — to show you task reminders at the time you set.</li>
+      <li><strong>Exact alarms</strong> — so reminders fire at the precise time you chose, not
+        "sometime around" it.</li>
+      <li><strong>Microphone</strong> — only used when you tap the record button to attach a voice note
+        to a task. Nothing is recorded in the background.</li>
+      <li><strong>Battery optimization exemption</strong> — optional, and only requested if you enable
+        it in Settings. Some phone manufacturers aggressively kill background apps, which can delay or
+        drop reminders; this permission asks Android not to do that to Slate.</li>
+      <li><strong>Run at startup</strong> — used to reschedule your reminders after your phone reboots,
+        since scheduled alarms don't survive a restart on Android.</li>
+      <li><strong>Install unknown apps</strong> — Slate isn't distributed through the Play Store, so
+        this is required by Android before it will let you install an updated APK downloaded through
+        the app's own "Check for updates" feature.</li>
+      <li><strong>Internet</strong> — used only to check GitHub for a newer app version and to download
+        the update file if you choose to install it. No other data is sent or received.</li>
+    </ul>
+
+    <h2>Data export and backup</h2>
+    <p>Settings → Data Management lets you export your tasks to a JSON file, or import one back in. That
+      file is written to storage you choose and is never transmitted anywhere by Slate — it's yours to
+      keep, move, or delete.</p>
+
+    <h2>What Slate doesn't do</h2>
+    <ul>
+      <li>No account or sign-in of any kind.</li>
+      <li>No analytics, crash reporting, or usage tracking.</li>
+      <li>No ads, and no third-party ad or tracking SDKs.</li>
+      <li>No data is sold, shared, or transmitted to anyone — Slate simply has no server to send it to.</li>
+    </ul>
+
+    <h2>Deleting your data</h2>
+    <p>Uninstalling Slate removes its local database and any recorded voice notes along with it. You can
+      also clear individual tasks, clear all completed tasks, or wipe everything from Settings → Data
+      Management without uninstalling.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, the "Last updated" date above will change too, and the new version will be
+      published at this same address.</p>
+
+    <hr class="divider">
+
+    <footer>
+      Questions about this policy? Reach out via the links in the app's About screen, or on
+      <a href="https://github.com/Dushmantha-Amarasinghe/slate" target="_blank" rel="noopener">GitHub</a>.
+    </footer>
+  </div>
+</body>
+</html>
