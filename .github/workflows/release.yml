@@ -1,0 +1,62 @@
+name: Release
+
+# Builds and publishes a signed release APK when a semantic version tag
+# (e.g. v1.0.0) is pushed — see RELEASING.md for the one-time setup this
+# depends on (the release keystore + its 4 GitHub Actions secrets).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Decode release keystore
+        run: echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.jks
+
+      - name: Write key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storeFile=release.jks
+          storePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.RELEASE_KEY_ALIAS }}
+          keyPassword=${{ secrets.RELEASE_KEY_PASSWORD }}
+          EOF
+
+      - run: flutter analyze
+      - run: flutter test
+
+      - name: Build signed release APK
+        run: flutter build apk --release
+
+      - name: Name and checksum the release asset
+        run: |
+          mkdir -p release-out
+          cp build/app/outputs/flutter-apk/app-release.apk "release-out/slate-${GITHUB_REF_NAME}.apk"
+          cd release-out
+          sha256sum "slate-${GITHUB_REF_NAME}.apk" > "slate-${GITHUB_REF_NAME}.apk.sha256"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-out/slate-${{ github.ref_name }}.apk
+            release-out/slate-${{ github.ref_name }}.apk.sha256
+          generate_release_notes: true
+
+      - name: Clean up signing material
+        if: always()
+        run: rm -f android/app/release.jks android/key.properties
