@@ -118,7 +118,7 @@ class _AboutSettingsScreenState extends State<AboutSettingsScreen> {
                 SettingsNavRow(
                   icon: Icons.mail_outline,
                   title: 'Send feedback',
-                  onTap: () => _openUrl('mailto:hello@reforatech.dev?subject=Slate%20feedback'),
+                  onTap: () => _openUrl('mailto:reforatech@gmail.com?subject=Slate%20feedback'),
                 ),
               ],
             ),
